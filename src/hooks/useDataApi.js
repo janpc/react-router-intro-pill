@@ -37,8 +37,13 @@ const useDataApi = (initialUrl, initialData) => {
     data: initialData,
   });
 
+  function setData(data){
+    dispatch({ type: "FETCH_SUCCESS", payload: data });
+  }
+
   useEffect(() => {
     let didCancel = false;
+
     const fetchData = async () => {
       dispatch({ type: "FETCH_INIT" });
 
@@ -58,14 +63,12 @@ const useDataApi = (initialUrl, initialData) => {
       fetchData();
     }
 
-    
-
     return () => {
       didCancel = true;
     };
   }, [url]);
 
-  return [state, setUrl];
+  return [state, setUrl, setData];
 };
 
 export default useDataApi;

@@ -20,10 +20,9 @@ function App() {
     doFetch(`https://api.punkapi.com/v2/beers?page=${page}&per_page=9`);
   }, [page]);
 
-  const login = () => {
-  };
-  const logout = () => {
-  };
+  const login = () => {};
+  const logout = () => {};
+
   return (
     <div>
       <Header isAuthenticated={isAuthenticated} login={login} logout={logout} />
@@ -32,13 +31,13 @@ function App() {
           <Find />
         </Route>
         <ProtectedRoute isAuthenticated={true} path="/beers/:beerId">
-          <BeerInfo />
+          <BeerInfo fetchInfo={fetchInfo} />
         </ProtectedRoute>
         <Route path="/error/:errorId" component={ErrorPage}>
           <ErrorPage />
         </Route>
         <Route exact path="/">
-          <Home fetchInfo={fetchInfo} />
+          <Home fetchInfo={fetchInfo} page={page} setPage={setPage}/>
         </Route>
         <Route path="*" component={ErrorPage}>
           <Redirect to="/error/0" />

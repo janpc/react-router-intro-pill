@@ -1,0 +1,17 @@
+.beers{
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.home__buttons{
+    text-align: right;
+    margin: 50px 10px 0;
+    button{
+        border: none;
+        border-radius: 5px;
+    }
+    span{
+        margin: 0 10px;
+    }
+}

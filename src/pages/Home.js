@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 
 import BeerCard from "../components/BeerCard";
 
-function Home({ fetchInfo }) {
+function Home({ fetchInfo, page, setPage }) {
   const { data, isLoading, isError } = fetchInfo;
   return (
     <div>
@@ -12,6 +12,24 @@ function Home({ fetchInfo }) {
           <div className="col">
             <div className="align-items-center">
               <h1 className="h3 m-0">Punk API</h1>
+              <div className="home__buttons">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => setPage(page - 1)}
+                  disabled={page === 1}
+                >
+                  {"<"}
+                </button>
+                <span>{page}</span>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => setPage(page + 1)}
+                >
+                  {">"}
+                </button>
+              </div>
               <section className="beers">
                 {isLoading || data == null ? (
                   <h2>loading...</h2>
