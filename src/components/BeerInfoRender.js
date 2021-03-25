@@ -1,6 +1,9 @@
 import React from "react";
 
+import { Link } from "react-router-dom";
+
 function BeerCard({ beer }) {
+  console.log(beer);
   let info = printInfo(beer);
   function printInfo(info) {
     let infoToPrint = [];
@@ -20,7 +23,16 @@ function BeerCard({ beer }) {
 
   return (
     <div className="col">
-      <div className="border p-3 mb-3">{info}</div>
+      {<h1 className="h3 m-0">{beer ? beer.name : "undefined"}</h1>}
+      <section className="beerInfo">
+        {beer ? (
+          <Link to={`/beers/find?brewed_after=${beer.first_brewed}`}>
+            <h4 className="h6">{beer.first_brewed}</h4>
+          </Link>
+        ) : null}
+
+        <div className="beerInfo__content">{info}</div>
+      </section>
     </div>
   );
 }

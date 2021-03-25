@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 
 import BeerCard from "../components/BeerCard";
 
-function Home({ fetchInfo, page, setPage }) {
-  const { data, isLoading, isError } = fetchInfo;
+import { BeersContext } from "../contexts/BeersContexts";
+
+function Home() {
+  const {  data, isLoading, isError , page, setPage, setMode } = useContext(BeersContext);
+
+  useEffect(() => {
+    setMode("normal");
+    setPage(1);
+  }, []);
+
   return (
     <div>
       <main className="container mt-4">
