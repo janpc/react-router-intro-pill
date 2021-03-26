@@ -17,7 +17,7 @@ const BeersContextProvider = ({ children }) => {
     } else if ((mode === "find")) {
         doFetch(`https://api.punkapi.com/v2/beers${search}&page=${page}&per_page=9`);
     }
-  }, [page, mode, search]);
+  }, [page, mode, search, doFetch]);
 
   return (
     <BeersContext.Provider

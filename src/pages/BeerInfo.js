@@ -1,41 +1,32 @@
-import React, { useEffect, useContext } from "react";
-import { useParams, Redirect, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useParams, Redirect } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import BeerInfoRender from "../components/BeerInfoRender";
-import useDataApi from "../hooks/useDataApi";
-
-import { BeersContext } from "../contexts/BeersContexts";
+import { setBeersOptions } from "../redux/beers/beersActions";
 
 function BeerInfo() {
-  const { data } = useContext(BeersContext);
   const { beerId } = useParams();
-  const { pathname } = useLocation();
-  const [{ data: beerData, isLoading, isError }, doFetch, setData] = useDataApi(
-    ``,
-    null
-  );
 
-  const getBeerData = () => {
-    if (data) {
-      setData(data.filter((beer) => beer.id === beerId));
-    }
-    if (!beerData) {
-      doFetch(`https://api.punkapi.com/v2${pathname}`);
-    }
-  };
+  const dispatch = useDispatch();
+  const { data } =  useSelector(state => state.beers);
+
+  const{
+    isLoading, data: results, isError
+  } = data;
 
   useEffect(() => {
-    getBeerData();
-  }, []);
+    dispatch(setBeersOptions({ mode: "beerInfo", id: beerId }));
+  }, [dispatch, beerId]);
 
   return (
     <div>
       <main className="container mt-4">
         <section className="row mb-2">
           <div className="col">
-            {!isLoading && beerData !== undefined && beerData !== null ? (
+            {!isLoading && results !== undefined && results !== null ? (
               <div className="align-items-center">
-                <BeerInfoRender beer={beerData[0]} />
+                <BeerInfoRender beer={results[0]} />
               </div>
             ) : isError ? (
               <Redirect to="/error/1" />

@@ -1,68 +1,34 @@
-import React, { useContext, useEffect } from "react";
-import { useLocation, Redirect } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-import BeerCard from "../components/BeerCard";
+import { setBeersOptions } from "../redux/beers/beersActions";
 
-import { BeersContext } from "../contexts/BeersContexts";
+import BeerList from "../components/BeerList";
+import FindForm from "../components/FindForm";
+
 
 function Find() {
   const { search } = useLocation();
   const brewed_after = new URLSearchParams(search).get("brewed_after");
-
-  const {
-    data,
-    isLoading,
-    isError,
-    setMode,
-    setSearch,
-    setPage,
-    page,
-  } = useContext(BeersContext);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setSearch(search);
-  }, [search]);
-
-  useEffect(() => {
-    setMode("find");
-    setPage(1);
-  }, []);
+    if (brewed_after) {
+      dispatch(setBeersOptions({ mode: "find", page: 1, search: search }));
+    }
+  }, [dispatch, brewed_after, search]);
 
   return (
     <div>
       <main className="container mt-4">
         <section className="row mb-2">
           <div className="col">
-            <div className="align-items-center">
-              <h1 className="h3 m-0">Brewed After: {brewed_after}</h1>
-              <div className="home__buttons">
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => setPage(page - 1)}
-                  disabled={page === 1}
-                >
-                  {"<"}
-                </button>
-                <span>{page}</span>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => setPage(page + 1)}
-                >
-                  {">"}
-                </button>
-              </div>
-              <section className="beers">
-                {isLoading || data == null ? (
-                  <h2>loading...</h2>
-                ) : isError ? (
-                  <Redirect to="/error/1" />
-                ) : (
-                  data.map((beer) => <BeerCard key={beer.id} beer={beer} />)
-                )}
-              </section>
-            </div>
+            {brewed_after !== null ? (
+              <BeerList title={`Brewed After: ${brewed_after}`} />
+            ) : (
+              <FindForm />
+            )}
             <hr />
           </div>
         </section>

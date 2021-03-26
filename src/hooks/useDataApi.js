@@ -1,4 +1,7 @@
 import { useState, useReducer, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setBeersData } from "../redux/beers/beersActions";
+import INITIAL_STATE from "../redux/beers/beersState";
 
 import simpleFetch from "../services/api";
 
@@ -28,7 +31,7 @@ const dataFetchReducer = (state, action) => {
   }
 };
 
-const useDataApi = (initialUrl, initialData) => {
+const useDataApi = (initialUrl, initialData = INITIAL_STATE) => {
   const [url, setUrl] = useState(initialUrl);
 
   const [state, dispatch] = useReducer(dataFetchReducer, {
@@ -37,9 +40,26 @@ const useDataApi = (initialUrl, initialData) => {
     data: initialData,
   });
 
-  function setData(data){
-    dispatch({ type: "FETCH_SUCCESS", payload: data });
-  }
+  const reduxDispatch = useDispatch();
+  const { page, mode, search, id } = useSelector((state) => state.beers);
+
+  useEffect(() => {
+    switch (mode) {
+      case "normal":
+        setUrl(`https://api.punkapi.com/v2/beers?page=${page}&per_page=9`);
+        break;
+      case "find":
+        setUrl(
+          `https://api.punkapi.com/v2/beers${search}&page=${page}&per_page=9`
+        );
+        break;
+      case "beerInfo":
+          setUrl(`https://api.punkapi.com/v2/beers/${id}`);
+        break;
+      default:
+        break;
+    }
+  }, [page, mode, search]);
 
   useEffect(() => {
     let didCancel = false;
@@ -68,7 +88,9 @@ const useDataApi = (initialUrl, initialData) => {
     };
   }, [url]);
 
-  return [state, setUrl, setData];
+  useEffect(() => {
+    reduxDispatch(setBeersData(state));
+  }, [state, reduxDispatch]);
 };
 
 export default useDataApi;

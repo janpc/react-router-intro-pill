@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function BeerCard({ beer }) {
-  console.log(beer);
   let info = printInfo(beer);
   function printInfo(info) {
     let infoToPrint = [];
